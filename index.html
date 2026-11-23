@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>おすしやさんごっこ</title>
+  <title>ミニどんぶりやさんごっこ</title>
   <style>
     /* 完全オフライン動作・警告防止のため外部CDNを使わず内蔵CSSのみで構築 */
     *, *::before, *::after {
@@ -849,16 +849,16 @@
           </svg>
         </button>
 
-        <div class="logo-icon">🍣</div>
+        <div class="logo-icon">🍚</div>
         <div>
           <div class="title-row">
-            <h1 class="app-title">おすしやさんごっこ</h1>
+            <h1 class="app-title">ミニどんぶりやさんごっこ</h1>
             <span class="user-badge">
               <span>👤</span>
               <span>あおいさん</span>
             </span>
           </div>
-          <p class="header-sub">すきな メニューを タッチしてね！</p>
+          <p class="header-sub">すきな ミニどんぶりを タッチしてね！</p>
         </div>
       </div>
 
@@ -894,7 +894,7 @@
             <span class="tray-title">🍽️ あおいさんの ちゅうもんトレイ（4つ まで）</span>
             <div class="tray-actions">
               <button onclick="openHistoryModal()" class="history-btn">
-                📋 たべた おさら (<span id="tray-history-count">0</span>)
+                📋 たべた どんぶり (<span id="tray-history-count">0</span>)
               </button>
               <button onclick="clearTray()" id="clear-tray-btn" class="clear-btn hidden">
                 ぜんぶ けす
@@ -1013,7 +1013,7 @@
   <!-- ==================== モーダル2：お会計完了画面 ==================== -->
   <div id="thankyou-modal" class="modal-overlay hidden">
     <div class="modal-card animate-pop">
-      <div style="font-size:56px; margin-bottom:10px;">🎉🍣🎉</div>
+      <div style="font-size:56px; margin-bottom:10px;">🎉🍚🎉</div>
       <div style="display:inline-block; border:4px solid #EF4444; color:#DC2626; border-radius:14px; padding:4px 16px; font-weight:900; font-size:18px; transform:rotate(-3deg); margin-bottom:12px;">
         おかいけい ずみ
       </div>
@@ -1056,13 +1056,13 @@
 
   <script>
     // ==========================================
-    // 1. メニューデータ定義（巻き寿司5種 ＋ お水）
+    // 1. メニューデータ定義（ミニどんぶり5種 ＋ お水）
     // ==========================================
     const MENU_ITEMS = [
       {
         id: 'bulgogi',
-        name: 'プルコギ巻',
-        rubyHtml: 'プルコギ<ruby>巻<rt>まき</rt></ruby>',
+        name: 'ミニプルコギ丼',
+        rubyHtml: 'ミニプルコギ<ruby>丼<rt>どん</rt></ruby>',
         price: 200,
         priceLabel: '200えん',
         borderClass: 'border-bulgogi',
@@ -1073,8 +1073,8 @@
       },
       {
         id: 'natto',
-        name: '納豆巻き',
-        rubyHtml: '<ruby>納豆<rt>なっとう</rt></ruby><ruby>巻<rt>ま</rt></ruby>き',
+        name: 'ミニ納豆丼',
+        rubyHtml: 'ミニ<ruby>納豆<rt>なっとう</rt></ruby><ruby>丼<rt>どん</rt></ruby>',
         price: 100,
         priceLabel: '100えん',
         borderClass: 'border-natto',
@@ -1085,8 +1085,8 @@
       },
       {
         id: 'shirasu',
-        name: 'しらす巻き',
-        rubyHtml: 'しらす<ruby>巻<rt>ま</rt></ruby>き',
+        name: 'ミニしらす丼',
+        rubyHtml: 'ミニしらす<ruby>丼<rt>どん</rt></ruby>',
         price: 100,
         priceLabel: '100えん',
         borderClass: 'border-shirasu',
@@ -1097,8 +1097,8 @@
       },
       {
         id: 'kanikama',
-        name: 'カニカマ巻',
-        rubyHtml: 'カニカマ<ruby>巻<rt>まき</rt></ruby>',
+        name: 'ミニカニカマ丼',
+        rubyHtml: 'ミニカニカマ<ruby>丼<rt>どん</rt></ruby>',
         price: 100,
         priceLabel: '100えん',
         borderClass: 'border-kanikama',
@@ -1109,8 +1109,8 @@
       },
       {
         id: 'zenbu',
-        name: '全部巻き',
-        rubyHtml: '<ruby>全部<rt>ぜんぶ</rt></ruby><ruby>巻<rt>ま</rt></ruby>き',
+        name: 'ミニ全部丼',
+        rubyHtml: 'ミニ<ruby>全部<rt>ぜんぶ</rt></ruby><ruby>丼<rt>どん</rt></ruby>',
         price: 300,
         priceLabel: '300えん',
         borderClass: 'border-zenbu',
@@ -1146,101 +1146,136 @@
         </svg>`;
       }
 
-      const plateAndNori = `
-        <ellipse cx="60" cy="68" rx="52" ry="10" fill="#E2E8F0" stroke="#94A3B8" stroke-width="2"/>
-        <g transform="translate(-14, -4) scale(0.92)">
-          <circle cx="60" cy="42" r="24" fill="#1E293B"/>
-          <circle cx="60" cy="42" r="19" fill="#FFFFFF"/>
-        </g>
-        <g transform="translate(14, 2)">
-          <circle cx="60" cy="42" r="24" fill="#1E293B"/>
-          <circle cx="60" cy="42" r="19" fill="#FFFFFF"/>
-        </g>
+      // ミニどんぶりの器（赤い和風どんぶり＆ふっくらごはん）
+      const bowlBackAndRice = `
+        <!-- どんぶりの奥のふち -->
+        <ellipse cx="60" cy="40" rx="36" ry="11" fill="#7F1D1D"/>
+        <!-- ふっくら白いごはん -->
+        <path d="M26 40 Q60 15 94 40 Z" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+      `;
+
+      const bowlFront = `
+        <!-- どんぶりの高台（底） -->
+        <path d="M46 68 L48 75 Q60 78 72 75 L74 68 Z" fill="#991B1B" stroke="#7F1D1D" stroke-width="2"/>
+        <!-- どんぶり本体（手前側） -->
+        <path d="M24 40 C24 61 40 70 60 70 C80 70 96 61 96 40 Q60 51 24 40 Z" fill="#DC2626" stroke="#991B1B" stroke-width="2" stroke-linejoin="round"/>
+        <!-- 金色の和柄ライン -->
+        <path d="M28 49 Q60 59 92 49" fill="none" stroke="#FBBF24" stroke-width="2.5" stroke-linecap="round"/>
       `;
 
       if (type === 'bulgogi') {
-        const filling = `
-          <circle cx="60" cy="42" r="10" fill="#78350F"/>
-          <circle cx="56" cy="39" r="5" fill="#92400E"/>
-          <circle cx="64" cy="44" r="5" fill="#B45309"/>
-          <path d="M51 45 Q60 52 69 45" stroke="#22C55E" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-          <circle cx="58" cy="37" r="1.5" fill="#FDE68A"/>
-          <circle cx="63" cy="41" r="1.5" fill="#FDE68A"/>
+        // ミニプルコギ丼（レタスと甘辛プルコギ肉＋白ごま）
+        const topping = `
+          <path d="M31 39 Q45 31 60 37 Q75 31 89 39 Q60 47 31 39 Z" fill="#22C55E"/>
+          <ellipse cx="47" cy="34" rx="11" ry="6" fill="#78350F" transform="rotate(-10 47 34)"/>
+          <ellipse cx="72" cy="34" rx="11" ry="6" fill="#92400E" transform="rotate(10 72 34)"/>
+          <ellipse cx="60" cy="30" rx="12" ry="6.5" fill="#B45309"/>
+          <ellipse cx="53" cy="37" rx="10" ry="5" fill="#78350F"/>
+          <ellipse cx="68" cy="37" rx="10" ry="5" fill="#92400E"/>
+          <circle cx="57" cy="28" r="1.4" fill="#FEF3C7"/>
+          <circle cx="64" cy="31" r="1.4" fill="#FEF3C7"/>
+          <circle cx="49" cy="33" r="1.4" fill="#FEF3C7"/>
+          <circle cx="71" cy="34" r="1.4" fill="#FEF3C7"/>
         `;
         return `<svg viewBox="0 0 120 82" class="illust-svg">
-          ${plateAndNori}
-          <g transform="translate(-14, -4) scale(0.92)">${filling}</g>
-          <g transform="translate(14, 2)">${filling}</g>
+          ${bowlBackAndRice}
+          ${topping}
+          ${bowlFront}
         </svg>`;
       }
 
       if (type === 'natto') {
-        const filling = `
-          <circle cx="60" cy="42" r="9.5" fill="#D97706"/>
-          <ellipse cx="56" cy="39" rx="3.5" ry="2.5" fill="#F59E0B" stroke="#92400E" stroke-width="1"/>
-          <ellipse cx="64" cy="39" rx="3.5" ry="2.5" fill="#FBBF24" stroke="#92400E" stroke-width="1"/>
-          <ellipse cx="57" cy="45" rx="3.5" ry="2.5" fill="#FBBF24" stroke="#92400E" stroke-width="1"/>
-          <ellipse cx="63" cy="45" rx="3.5" ry="2.5" fill="#F59E0B" stroke="#92400E" stroke-width="1"/>
-          <circle cx="60" cy="42" r="2.5" fill="#FDE68A"/>
+        // ミニ納豆丼（たっぷり納豆の粒＋ねぎ＆卵黄）
+        const topping = `
+          <path d="M32 39 Q60 22 88 39 Q60 48 32 39 Z" fill="#D97706"/>
+          <ellipse cx="46" cy="35" rx="4.5" ry="3" fill="#F59E0B" stroke="#92400E" stroke-width="1"/>
+          <ellipse cx="55" cy="31" rx="4.5" ry="3" fill="#FBBF24" stroke="#92400E" stroke-width="1"/>
+          <ellipse cx="65" cy="31" rx="4.5" ry="3" fill="#F59E0B" stroke="#92400E" stroke-width="1"/>
+          <ellipse cx="74" cy="35" rx="4.5" ry="3" fill="#FBBF24" stroke="#92400E" stroke-width="1"/>
+          <ellipse cx="42" cy="39" rx="4.5" ry="3" fill="#FBBF24" stroke="#92400E" stroke-width="1"/>
+          <ellipse cx="52" cy="38" rx="4.5" ry="3" fill="#F59E0B" stroke="#92400E" stroke-width="1"/>
+          <ellipse cx="68" cy="38" rx="4.5" ry="3" fill="#F59E0B" stroke="#92400E" stroke-width="1"/>
+          <ellipse cx="78" cy="39" rx="4.5" ry="3" fill="#FBBF24" stroke="#92400E" stroke-width="1"/>
+          <circle cx="60" cy="35" r="5.5" fill="#FACC15" stroke="#EA580C" stroke-width="1.2"/>
+          <circle cx="51" cy="34" r="2" fill="#16A34A"/>
+          <circle cx="69" cy="35" r="2" fill="#16A34A"/>
         `;
         return `<svg viewBox="0 0 120 82" class="illust-svg">
-          ${plateAndNori}
-          <g transform="translate(-14, -4) scale(0.92)">${filling}</g>
-          <g transform="translate(14, 2)">${filling}</g>
+          ${bowlBackAndRice}
+          ${topping}
+          ${bowlFront}
         </svg>`;
       }
 
       if (type === 'shirasu') {
-        const filling = `
-          <circle cx="60" cy="42" r="9.5" fill="#E0F2FE"/>
-          <path d="M51 43 Q60 51 69 43" stroke="#16A34A" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-          <path d="M54 39 Q58 37 61 40" stroke="#64748B" stroke-width="2.2" fill="none" stroke-linecap="round"/>
-          <path d="M59 43 Q63 40 67 43" stroke="#475569" stroke-width="2.2" fill="none" stroke-linecap="round"/>
-          <path d="M55 44 Q59 42 62 45" stroke="#94A3B8" stroke-width="2" fill="none" stroke-linecap="round"/>
+        // ミニしらす丼（大葉の上にふわふわしらすたっぷり）
+        const topping = `
+          <path d="M33 39 Q60 31 87 39 Q60 47 33 39 Z" fill="#22C55E"/>
+          <path d="M35 38 Q60 21 85 38 Q60 46 35 38 Z" fill="#F1F5F9" stroke="#CBD5E1" stroke-width="1.5"/>
+          <path d="M46 32 Q52 29 57 32" stroke="#64748B" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+          <path d="M62 31 Q68 29 73 33" stroke="#475569" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+          <path d="M41 37 Q47 34 52 38" stroke="#94A3B8" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+          <path d="M55 36 Q61 33 66 37" stroke="#64748B" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+          <path d="M69 37 Q75 34 80 38" stroke="#475569" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+          <circle cx="57" cy="32" r="0.9" fill="#0F172A"/>
+          <circle cx="62" cy="31" r="0.9" fill="#0F172A"/>
+          <circle cx="66" cy="37" r="0.9" fill="#0F172A"/>
         `;
         return `<svg viewBox="0 0 120 82" class="illust-svg">
-          ${plateAndNori}
-          <g transform="translate(-14, -4) scale(0.92)">${filling}</g>
-          <g transform="translate(14, 2)">${filling}</g>
+          ${bowlBackAndRice}
+          ${topping}
+          ${bowlFront}
         </svg>`;
       }
 
       if (type === 'kanikama') {
-        const filling = `
-          <circle cx="60" cy="42" r="9.5" fill="#FFFFFF" stroke="#FDA4AF" stroke-width="1.5"/>
-          <path d="M52 38 A9 9 0 0 1 68 38 Z" fill="#F43F5E"/>
-          <path d="M52 46 A9 9 0 0 0 68 46 Z" fill="#FB7185"/>
-          <circle cx="60" cy="42" r="3" fill="#FEF08A"/>
+        // ミニカニカマ丼（赤と白のしましまカニカマ並べ）
+        const topping = `
+          <g transform="rotate(-18 44 35)">
+            <rect x="35" y="30" width="18" height="9" rx="3" fill="#FFFFFF" stroke="#FDA4AF" stroke-width="1"/>
+            <rect x="35" y="30" width="18" height="4.5" rx="2" fill="#F43F5E"/>
+          </g>
+          <g transform="rotate(18 76 35)">
+            <rect x="67" y="30" width="18" height="9" rx="3" fill="#FFFFFF" stroke="#FDA4AF" stroke-width="1"/>
+            <rect x="67" y="30" width="18" height="4.5" rx="2" fill="#F43F5E"/>
+          </g>
+          <rect x="50" y="27" width="20" height="10" rx="3" fill="#FFFFFF" stroke="#FDA4AF" stroke-width="1"/>
+          <rect x="50" y="27" width="20" height="5" rx="2" fill="#E11D48"/>
+          <path d="M44 38 Q60 44 76 38" stroke="#FEF08A" stroke-width="3" fill="none" stroke-linecap="round"/>
         `;
         return `<svg viewBox="0 0 120 82" class="illust-svg">
-          ${plateAndNori}
-          <g transform="translate(-14, -4) scale(0.92)">${filling}</g>
-          <g transform="translate(14, 2)">${filling}</g>
+          ${bowlBackAndRice}
+          ${topping}
+          ${bowlFront}
         </svg>`;
       }
 
       if (type === 'zenbu') {
-        const bigFilling = `
-          <circle cx="60" cy="42" r="12.5" fill="#FEF3C7"/>
-          <circle cx="55" cy="37" r="4.5" fill="#78350F"/>
-          <circle cx="65" cy="37" r="4.5" fill="#F43F5E"/>
-          <circle cx="55" cy="46" r="4.5" fill="#D97706"/>
-          <circle cx="65" cy="46" r="4.5" fill="#BAE6FD"/>
-          <circle cx="60" cy="42" r="4" fill="#FACC15"/>
-          <circle cx="60" cy="34" r="2.5" fill="#22C55E"/>
+        // ミニ全部丼（プルコギ・納豆・しらす・カニカマ・たまごの豪華5色丼！）
+        const topping = `
+          <!-- レタス・大葉ベース -->
+          <path d="M30 39 Q60 30 90 39 Q60 48 30 39 Z" fill="#22C55E"/>
+          <!-- 左：プルコギ -->
+          <ellipse cx="43" cy="35" rx="10" ry="6" fill="#78350F"/>
+          <circle cx="42" cy="34" r="1.3" fill="#FEF3C7"/>
+          <!-- 右：カニカマ -->
+          <rect x="67" y="30" width="16" height="8" rx="3" fill="#FFFFFF" transform="rotate(15 75 34)"/>
+          <rect x="67" y="30" width="16" height="4" rx="2" fill="#F43F5E" transform="rotate(15 75 34)"/>
+          <!-- 奥左：納豆 -->
+          <ellipse cx="52" cy="28" rx="7" ry="4.5" fill="#D97706"/>
+          <circle cx="50" cy="28" r="2" fill="#FBBF24"/>
+          <circle cx="54" cy="28" r="2" fill="#F59E0B"/>
+          <!-- 奥右：しらす -->
+          <ellipse cx="67" cy="28" rx="7" ry="4.5" fill="#E0F2FE"/>
+          <path d="M64 28 Q67 26 70 28" stroke="#64748B" stroke-width="1.8" fill="none"/>
+          <!-- 中央：キラキラ卵黄 -->
+          <circle cx="60" cy="36" r="6" fill="#FACC15" stroke="#EA580C" stroke-width="1.5"/>
+          <circle cx="58" cy="34" r="1.5" fill="#FFFFFF" opacity="0.8"/>
         `;
         return `<svg viewBox="0 0 120 82" class="illust-svg">
-          <ellipse cx="60" cy="68" rx="54" ry="10" fill="#FDE68A" stroke="#F59E0B" stroke-width="2"/>
-          <g transform="translate(-14, -4) scale(0.94)">
-            <circle cx="60" cy="42" r="25" fill="#1E293B"/>
-            <circle cx="60" cy="42" r="20" fill="#FFFFFF"/>
-            ${bigFilling}
-          </g>
-          <g transform="translate(14, 2)">
-            <circle cx="60" cy="42" r="25" fill="#1E293B"/>
-            <circle cx="60" cy="42" r="20" fill="#FFFFFF"/>
-            ${bigFilling}
-          </g>
+          ${bowlBackAndRice}
+          ${topping}
+          ${bowlFront}
         </svg>`;
       }
       return '';
@@ -1655,7 +1690,7 @@
       playBeepSound();
       const listEl = document.getElementById('history-modal-list');
       if (orderedHistory.length === 0) {
-        listEl.innerHTML = `<p style="text-align:center; color:#78716C; font-weight:700; padding:24px 0;">まだ なにも ちゅうもん していないよ！<br>すきな メニューを タッチしてね🍣</p>`;
+        listEl.innerHTML = `<p style="text-align:center; color:#78716C; font-weight:700; padding:24px 0;">まだ なにも ちゅうもん していないよ！<br>すきな メニューを タッチしてね🍚</p>`;
       } else {
         const grouped = groupHistoryItems();
         listEl.innerHTML = grouped.map(g => `
